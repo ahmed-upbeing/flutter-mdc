@@ -13,23 +13,111 @@
 // limitations under the License.
 
 import 'package:flutter/material.dart';
+import 'supplemental/asymmetric_view.dart';
+
+import 'model/product.dart';
+import 'model/products_repository.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({Key? key}) : super(key: key);
 
-  // TODO: Make a collection of cards (102)
+  List<Card> _buildGridProducts(BuildContext context) {
+    final ThemeData theme = Theme.of(context);
+
+    List<Product> products = ProductsRepository.loadProducts(Category.all);
+
+    if (products.isEmpty) {
+      return const <Card>[];
+    }
+
+    List<Card> cards = [];
+
+    for (var product in products) {
+      cards.add(Card(
+        clipBehavior: Clip.antiAlias,
+        elevation: 0,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            AspectRatio(
+              aspectRatio: 14 / 10,
+              child: Image.asset(
+                product.assetName,
+                package: product.assetPackage,
+              ),
+            ),
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(16, 12, 16, 12),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    Text(
+                      product.name,
+                      style: theme.textTheme.button,
+                      softWrap: false,
+                      overflow: TextOverflow.ellipsis,
+                      maxLines: 1,
+                    ),
+                    const SizedBox(
+                      height: 4,
+                    ),
+                    Text(
+                      product.price.toString() + "\$",
+                      style: theme.textTheme.bodySmall,
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
+      ));
+    }
+
+    return cards;
+  }
+
   // TODO: Add a variable for Category (104)
   @override
   Widget build(BuildContext context) {
     // TODO: Return an AsymmetricView (104)
     // TODO: Pass Category variable to AsymmetricView (104)
-    return const Scaffold(
-      // TODO: Add app bar (102)
-      // TODO: Add a grid view (102)
-      body: Center(
-        child: Text('You did it!'),
+    return Scaffold(
+      appBar: AppBar(
+        leading: IconButton(
+          icon: const Icon(Icons.menu),
+          onPressed: () {
+            print("Menu button");
+          },
+        ),
+        title: const Text("My SHRINE"),
+        actions: [
+          IconButton(
+            onPressed: () {
+              print("Search button");
+            },
+            icon: const Icon(
+              Icons.search,
+              semanticLabel: 'search',
+            ),
+          ),
+          IconButton(
+            onPressed: () {
+              print("Filter button here");
+            },
+            icon: const Icon(
+              Icons.tune,
+              semanticLabel: 'Filter',
+            ),
+          ),
+        ],
       ),
-      // TODO: Set resizeToAvoidBottomInset (101)
+      body: AsymmetricView(
+        products: ProductsRepository.loadProducts(Category.all),
+      ),
+      resizeToAvoidBottomInset: false,
     );
   }
 }

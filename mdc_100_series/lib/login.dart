@@ -13,6 +13,7 @@
 // limitations under the License.
 
 import 'package:flutter/material.dart';
+import 'package:shrine/colors.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -22,9 +23,13 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  // TODO: Add text editing controllers (101)
+  final _usernameController = TextEditingController();
+  final _passwordController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
     return Scaffold(
       body: SafeArea(
         child: ListView(
@@ -35,13 +40,64 @@ class _LoginPageState extends State<LoginPage> {
               children: <Widget>[
                 Image.asset('assets/diamond.png'),
                 const SizedBox(height: 16.0),
-                const Text('SHRINE'),
+                Text(
+                  'Ahmed Store',
+                  style: theme.textTheme.headlineSmall,
+                ),
               ],
             ),
             const SizedBox(height: 120.0),
             // TODO: Remove filled: true values (103)
-            // TODO: Add TextField widgets (101)
-            // TODO: Add button bar (101)
+            TextField(
+              controller: _usernameController,
+              decoration: const InputDecoration(
+                labelText: 'Username',
+              ),
+            ),
+            const SizedBox(
+              height: 16.0,
+            ),
+            TextField(
+              controller: _passwordController,
+              decoration: const InputDecoration(
+                labelText: 'Password',
+              ),
+              obscureText: true,
+            ),
+            const SizedBox(
+              height: 18.0,
+            ),
+            OverflowBar(
+              alignment: MainAxisAlignment.end,
+              children: [
+                TextButton(
+                  onPressed: () {
+                    // clear the inputs:
+                    _usernameController.clear();
+                    _passwordController.clear();
+                  },
+                  child: Text('Cancel'),
+                  style: TextButton.styleFrom(
+                      foregroundColor: theme.colorScheme.secondary,
+                      shape: const BeveledRectangleBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(7)))),
+                ),
+                const SizedBox(
+                  width: 12.00,
+                ),
+                ElevatedButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  child: const Text('Next'),
+                  style: ElevatedButton.styleFrom(
+                    foregroundColor: kShrineBrown900,
+                    elevation: 8,
+                    backgroundColor: kShrinePink100,
+                  ),
+                )
+              ],
+            ),
           ],
         ),
       ),
